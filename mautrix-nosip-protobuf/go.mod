@@ -1,4 +1,4 @@
-module open-imcore.com/mautrix-nosip-protobuf
+module github.com/open-imcore/barcelona-mautrix-protocol/mautrix-nosip-protobuf
 
 go 1.19
 

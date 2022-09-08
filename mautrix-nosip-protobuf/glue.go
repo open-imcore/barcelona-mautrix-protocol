@@ -204,11 +204,23 @@ func ParseIdentifier(guid string) GUID {
 		return GUID{}
 	}
 	parts := strings.Split(guid, ";")
+	if len(parts) == 1 {
+		return GUID{
+			Service: "iMessage",
+			IsGroup: false,
+			LocalID: guid,
+		}
+	}
 	return GUID{
 		Service: parts[0],
 		IsGroup: parts[1] == "+",
 		LocalID: parts[2],
 	}
+}
+
+func ParseIdentifier2(guid string) *GUID {
+	retval := ParseIdentifier(guid)
+	return &retval
 }
 
 func (id *GUID) ToString() string {

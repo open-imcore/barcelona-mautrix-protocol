@@ -1636,6 +1636,58 @@ public struct PBSendResponse {
   fileprivate var _time: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
 }
 
+public struct PBSendResult {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var result: PBSendResult.OneOf_Result? = nil
+
+  public var sendResponse: PBSendResponse {
+    get {
+      if case .sendResponse(let v)? = result {return v}
+      return PBSendResponse()
+    }
+    set {result = .sendResponse(newValue)}
+  }
+
+  public var error: PBError {
+    get {
+      if case .error(let v)? = result {return v}
+      return PBError()
+    }
+    set {result = .error(newValue)}
+  }
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public enum OneOf_Result: Equatable {
+    case sendResponse(PBSendResponse)
+    case error(PBError)
+
+  #if !swift(>=4.1)
+    public static func ==(lhs: PBSendResult.OneOf_Result, rhs: PBSendResult.OneOf_Result) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch (lhs, rhs) {
+      case (.sendResponse, .sendResponse): return {
+        guard case .sendResponse(let l) = lhs, case .sendResponse(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.error, .error): return {
+        guard case .error(let l) = lhs, case .error(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      default: return false
+      }
+    }
+  #endif
+  }
+
+  public init() {}
+}
+
 public struct PBError {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -2098,6 +2150,58 @@ public struct PBResolveIdentifierResponse {
   fileprivate var _guid: PBGUID? = nil
 }
 
+public struct PBResolveIdentifierResult {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var result: PBResolveIdentifierResult.OneOf_Result? = nil
+
+  public var response: PBResolveIdentifierResponse {
+    get {
+      if case .response(let v)? = result {return v}
+      return PBResolveIdentifierResponse()
+    }
+    set {result = .response(newValue)}
+  }
+
+  public var error: PBError {
+    get {
+      if case .error(let v)? = result {return v}
+      return PBError()
+    }
+    set {result = .error(newValue)}
+  }
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public enum OneOf_Result: Equatable {
+    case response(PBResolveIdentifierResponse)
+    case error(PBError)
+
+  #if !swift(>=4.1)
+    public static func ==(lhs: PBResolveIdentifierResult.OneOf_Result, rhs: PBResolveIdentifierResult.OneOf_Result) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch (lhs, rhs) {
+      case (.response, .response): return {
+        guard case .response(let l) = lhs, case .response(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.error, .error): return {
+        guard case .error(let l) = lhs, case .error(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      default: return false
+      }
+    }
+  #endif
+  }
+
+  public init() {}
+}
+
 public struct PBPrepareDMRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -2361,6 +2465,101 @@ public struct PBHistoryQuery {
   fileprivate var _beforeGuid: String? = nil
   fileprivate var _afterGuid: String? = nil
   fileprivate var _limit: Int64? = nil
+}
+
+public struct PBChatQuery {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var messagesAfterDate: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _messagesAfterDate ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_messagesAfterDate = newValue}
+  }
+  /// Returns true if `messagesAfterDate` has been explicitly set.
+  public var hasMessagesAfterDate: Bool {return self._messagesAfterDate != nil}
+  /// Clears the value of `messagesAfterDate`. Subsequent reads from it will return its default value.
+  public mutating func clearMessagesAfterDate() {self._messagesAfterDate = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _messagesAfterDate: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+public struct PBEmpty {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+public struct PBEmptyResult {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var result: PBEmptyResult.OneOf_Result? = nil
+
+  public var empty: PBEmpty {
+    get {
+      if case .empty(let v)? = result {return v}
+      return PBEmpty()
+    }
+    set {result = .empty(newValue)}
+  }
+
+  public var error: PBError {
+    get {
+      if case .error(let v)? = result {return v}
+      return PBError()
+    }
+    set {result = .error(newValue)}
+  }
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public enum OneOf_Result: Equatable {
+    case empty(PBEmpty)
+    case error(PBError)
+
+  #if !swift(>=4.1)
+    public static func ==(lhs: PBEmptyResult.OneOf_Result, rhs: PBEmptyResult.OneOf_Result) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch (lhs, rhs) {
+      case (.empty, .empty): return {
+        guard case .empty(let l) = lhs, case .empty(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.error, .error): return {
+        guard case .error(let l) = lhs, case .error(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      default: return false
+      }
+    }
+  #endif
+  }
+
+  public init() {}
+}
+
+public struct PBBarcelonaStartupInfo {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var socketPath: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
 }
 
 public struct PBPayload {
@@ -2888,6 +3087,8 @@ extension PBTypingNotification: @unchecked Sendable {}
 extension PBContact: @unchecked Sendable {}
 extension PBChatInfo: @unchecked Sendable {}
 extension PBSendResponse: @unchecked Sendable {}
+extension PBSendResult: @unchecked Sendable {}
+extension PBSendResult.OneOf_Result: @unchecked Sendable {}
 extension PBError: @unchecked Sendable {}
 extension PBSendMessageStatus: @unchecked Sendable {}
 extension PBStartupSyncHookResponse: @unchecked Sendable {}
@@ -2907,6 +3108,8 @@ extension PBGetRecentMessagesRequest: @unchecked Sendable {}
 extension PBGetMessagesAfterRequest: @unchecked Sendable {}
 extension PBResolveIdentifierRequest: @unchecked Sendable {}
 extension PBResolveIdentifierResponse: @unchecked Sendable {}
+extension PBResolveIdentifierResult: @unchecked Sendable {}
+extension PBResolveIdentifierResult.OneOf_Result: @unchecked Sendable {}
 extension PBPrepareDMRequest: @unchecked Sendable {}
 extension PBLogLine: @unchecked Sendable {}
 extension PBBridgeStatus: @unchecked Sendable {}
@@ -2916,6 +3119,11 @@ extension PBChatIDList: @unchecked Sendable {}
 extension PBPing: @unchecked Sendable {}
 extension PBPong: @unchecked Sendable {}
 extension PBHistoryQuery: @unchecked Sendable {}
+extension PBChatQuery: @unchecked Sendable {}
+extension PBEmpty: @unchecked Sendable {}
+extension PBEmptyResult: @unchecked Sendable {}
+extension PBEmptyResult.OneOf_Result: @unchecked Sendable {}
+extension PBBarcelonaStartupInfo: @unchecked Sendable {}
 extension PBPayload: @unchecked Sendable {}
 extension PBPayload.OneOf_Command: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
@@ -4976,6 +5184,76 @@ extension PBSendResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
   }
 }
 
+extension PBSendResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "SendResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "SendResponse"),
+    2: .same(proto: "Error"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try {
+        var v: PBSendResponse?
+        var hadOneofValue = false
+        if let current = self.result {
+          hadOneofValue = true
+          if case .sendResponse(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.result = .sendResponse(v)
+        }
+      }()
+      case 2: try {
+        var v: PBError?
+        var hadOneofValue = false
+        if let current = self.result {
+          hadOneofValue = true
+          if case .error(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.result = .error(v)
+        }
+      }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    switch self.result {
+    case .sendResponse?: try {
+      guard case .sendResponse(let v)? = self.result else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    }()
+    case .error?: try {
+      guard case .error(let v)? = self.result else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    }()
+    case nil: break
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: PBSendResult, rhs: PBSendResult) -> Bool {
+    if lhs.result != rhs.result {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension PBError: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = "Error"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -5768,6 +6046,76 @@ extension PBResolveIdentifierResponse: SwiftProtobuf.Message, SwiftProtobuf._Mes
   }
 }
 
+extension PBResolveIdentifierResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ResolveIdentifierResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "Response"),
+    2: .same(proto: "Error"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try {
+        var v: PBResolveIdentifierResponse?
+        var hadOneofValue = false
+        if let current = self.result {
+          hadOneofValue = true
+          if case .response(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.result = .response(v)
+        }
+      }()
+      case 2: try {
+        var v: PBError?
+        var hadOneofValue = false
+        if let current = self.result {
+          hadOneofValue = true
+          if case .error(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.result = .error(v)
+        }
+      }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    switch self.result {
+    case .response?: try {
+      guard case .response(let v)? = self.result else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    }()
+    case .error?: try {
+      guard case .error(let v)? = self.result else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    }()
+    case nil: break
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: PBResolveIdentifierResult, rhs: PBResolveIdentifierResult) -> Bool {
+    if lhs.result != rhs.result {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension PBPrepareDMRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = "PrepareDMRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -6153,6 +6501,163 @@ extension PBHistoryQuery: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if lhs._beforeGuid != rhs._beforeGuid {return false}
     if lhs._afterGuid != rhs._afterGuid {return false}
     if lhs._limit != rhs._limit {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension PBChatQuery: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "ChatQuery"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    15: .same(proto: "messagesAfterDate"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 15: try { try decoder.decodeSingularMessageField(value: &self._messagesAfterDate) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._messagesAfterDate {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: PBChatQuery, rhs: PBChatQuery) -> Bool {
+    if lhs._messagesAfterDate != rhs._messagesAfterDate {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension PBEmpty: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "Empty"
+  public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: PBEmpty, rhs: PBEmpty) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension PBEmptyResult: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "EmptyResult"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "Empty"),
+    2: .same(proto: "Error"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try {
+        var v: PBEmpty?
+        var hadOneofValue = false
+        if let current = self.result {
+          hadOneofValue = true
+          if case .empty(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.result = .empty(v)
+        }
+      }()
+      case 2: try {
+        var v: PBError?
+        var hadOneofValue = false
+        if let current = self.result {
+          hadOneofValue = true
+          if case .error(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.result = .error(v)
+        }
+      }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    switch self.result {
+    case .empty?: try {
+      guard case .empty(let v)? = self.result else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    }()
+    case .error?: try {
+      guard case .error(let v)? = self.result else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    }()
+    case nil: break
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: PBEmptyResult, rhs: PBEmptyResult) -> Bool {
+    if lhs.result != rhs.result {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension PBBarcelonaStartupInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = "BarcelonaStartupInfo"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "SocketPath"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.socketPath) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.socketPath.isEmpty {
+      try visitor.visitSingularStringField(value: self.socketPath, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: PBBarcelonaStartupInfo, rhs: PBBarcelonaStartupInfo) -> Bool {
+    if lhs.socketPath != rhs.socketPath {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

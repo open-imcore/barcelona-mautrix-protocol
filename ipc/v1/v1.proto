@@ -275,6 +275,13 @@ message SendResponse {
     google.protobuf.Timestamp Time = 3;
 }
 
+message SendResult {
+    oneof Result {
+        SendResponse SendResponse = 1;
+        Error Error = 2;
+    }
+}
+
 message Error {
     string Code = 1;
     string Message = 2;
@@ -369,6 +376,13 @@ message ResolveIdentifierResponse {
     GUID GUID = 1;
 }
 
+message ResolveIdentifierResult {
+    oneof Result {
+        ResolveIdentifierResponse Response = 1;
+        Error Error = 2;
+    }
+}
+
 message PrepareDMRequest {
     GUID GUID  = 1;
 }
@@ -419,12 +433,53 @@ message HistoryQuery {
     optional int64 limit = 19;
 }
 
+message ChatQuery {
+    optional google.protobuf.Timestamp messagesAfterDate = 15;
+}
+
+message Empty {}
+message EmptyResult {
+    oneof Result {
+        Empty Empty = 1;
+        Error Error = 2;
+    }
+}
+
 service Barcelona {
+    rpc StartupSyncHook(Empty) returns (StartupSyncHookResponse) {}
     rpc RequestHistory(HistoryQuery) returns (MessageList) {}
+    rpc RequestChats(ChatQuery) returns (ChatIDList) {}
+    rpc Ping(Empty) returns (Empty) {}
+    
+    rpc GetContacts(Empty) returns (ContactList) {}
+    rpc GetContact(GUID) returns (Contact) {}
+    rpc GetChat(GUID) returns (ChatInfo) {}
+    rpc GetChatAvatar(GUID) returns (Attachment) {}
+    
+    rpc SendMessage(SendMessageRequest) returns (SendResult) {}
+    rpc SendReadReceipt(SendReadReceiptRequest) returns (Empty) {}
+    rpc SetTyping(SetTypingRequest) returns (Empty) {}
+    rpc ResolveIdentifier(ResolveIdentifierRequest) returns (ResolveIdentifierResult) {}
+    
+    rpc PrepareDM(PrepareDMRequest) returns (EmptyResult) {}
+    
+    rpc LogStream(Empty) returns (stream LogLine) {}
+    rpc MessageStream(Empty) returns (stream Message) {}
+    rpc ReceiptStream(Empty) returns (stream ReadReceipt) {}
+    rpc TypingStream(Empty) returns (stream TypingNotification) {}
+    rpc ChatStream(Empty) returns (stream ChatInfo) {}
+    rpc ContactStream(Empty) returns (stream Contact) {}
+    rpc MessageStatusStream(Empty) returns (stream SendMessageStatus) {}
+    rpc BridgeStatusStream(Empty) returns (stream BridgeStatus) {}
+}
+
+message BarcelonaStartupInfo {
+    string SocketPath = 1;
 }
 
 service Bridge {
-    
+    rpc BarcelonaReady(BarcelonaStartupInfo) returns (Empty) {}
+    rpc TransferRetrievalFailed(Error) returns (Empty) {}
 }
 
 message Payload {

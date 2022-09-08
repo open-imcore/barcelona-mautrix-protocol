@@ -31,15 +31,141 @@ public protocol BarcelonaClientProtocol: GRPCClient {
   var serviceName: String { get }
   var interceptors: BarcelonaClientInterceptorFactoryProtocol? { get }
 
+  func startupSyncHook(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBEmpty, PBStartupSyncHookResponse>
+
   func requestHistory(
     _ request: PBHistoryQuery,
     callOptions: CallOptions?
   ) -> UnaryCall<PBHistoryQuery, PBMessageList>
+
+  func requestChats(
+    _ request: PBChatQuery,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBChatQuery, PBChatIDList>
+
+  func ping(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBEmpty, PBEmpty>
+
+  func getContacts(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBEmpty, PBContactList>
+
+  func getContact(
+    _ request: PBGUID,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBGUID, PBContact>
+
+  func getChat(
+    _ request: PBGUID,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBGUID, PBChatInfo>
+
+  func getChatAvatar(
+    _ request: PBGUID,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBGUID, PBAttachment>
+
+  func sendMessage(
+    _ request: PBSendMessageRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBSendMessageRequest, PBSendResult>
+
+  func sendReadReceipt(
+    _ request: PBSendReadReceiptRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBSendReadReceiptRequest, PBEmpty>
+
+  func setTyping(
+    _ request: PBSetTypingRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBSetTypingRequest, PBEmpty>
+
+  func resolveIdentifier(
+    _ request: PBResolveIdentifierRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBResolveIdentifierRequest, PBResolveIdentifierResult>
+
+  func prepareDM(
+    _ request: PBPrepareDMRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBPrepareDMRequest, PBEmptyResult>
+
+  func logStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBLogLine) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBLogLine>
+
+  func messageStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBMessage) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBMessage>
+
+  func receiptStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBReadReceipt) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBReadReceipt>
+
+  func typingStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBTypingNotification) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBTypingNotification>
+
+  func chatStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBChatInfo) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBChatInfo>
+
+  func contactStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBContact) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBContact>
+
+  func messageStatusStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBSendMessageStatus) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBSendMessageStatus>
+
+  func bridgeStatusStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions?,
+    handler: @escaping (PBBridgeStatus) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBBridgeStatus>
 }
 
 extension BarcelonaClientProtocol {
   public var serviceName: String {
     return "Barcelona"
+  }
+
+  /// Unary call to StartupSyncHook
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to StartupSyncHook.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func startupSyncHook(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBEmpty, PBStartupSyncHookResponse> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.startupSyncHook.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeStartupSyncHookInterceptors() ?? []
+    )
   }
 
   /// Unary call to RequestHistory
@@ -57,6 +183,372 @@ extension BarcelonaClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeRequestHistoryInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to RequestChats
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to RequestChats.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func requestChats(
+    _ request: PBChatQuery,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBChatQuery, PBChatIDList> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.requestChats.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeRequestChatsInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to Ping
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to Ping.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func ping(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBEmpty, PBEmpty> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.ping.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePingInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to GetContacts
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetContacts.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getContacts(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBEmpty, PBContactList> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getContacts.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetContactsInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to GetContact
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetContact.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getContact(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBGUID, PBContact> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getContact.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetContactInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to GetChat
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetChat.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getChat(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBGUID, PBChatInfo> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getChat.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetChatInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to GetChatAvatar
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetChatAvatar.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getChatAvatar(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBGUID, PBAttachment> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getChatAvatar.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetChatAvatarInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to SendMessage
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to SendMessage.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func sendMessage(
+    _ request: PBSendMessageRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBSendMessageRequest, PBSendResult> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.sendMessage.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSendMessageInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to SendReadReceipt
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to SendReadReceipt.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func sendReadReceipt(
+    _ request: PBSendReadReceiptRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBSendReadReceiptRequest, PBEmpty> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.sendReadReceipt.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSendReadReceiptInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to SetTyping
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to SetTyping.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func setTyping(
+    _ request: PBSetTypingRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBSetTypingRequest, PBEmpty> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.setTyping.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSetTypingInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to ResolveIdentifier
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ResolveIdentifier.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func resolveIdentifier(
+    _ request: PBResolveIdentifierRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBResolveIdentifierRequest, PBResolveIdentifierResult> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.resolveIdentifier.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeResolveIdentifierInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to PrepareDM
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to PrepareDM.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func prepareDM(
+    _ request: PBPrepareDMRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBPrepareDMRequest, PBEmptyResult> {
+    return self.makeUnaryCall(
+      path: BarcelonaClientMetadata.Methods.prepareDM.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePrepareDMInterceptors() ?? []
+    )
+  }
+
+  /// Server streaming call to LogStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to LogStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func logStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBLogLine) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBLogLine> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.logStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeLogStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to MessageStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to MessageStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func messageStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBMessage) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBMessage> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.messageStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeMessageStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to ReceiptStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ReceiptStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func receiptStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBReadReceipt) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBReadReceipt> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.receiptStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeReceiptStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to TypingStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to TypingStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func typingStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBTypingNotification) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBTypingNotification> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.typingStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTypingStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to ChatStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ChatStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func chatStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBChatInfo) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBChatInfo> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.chatStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeChatStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to ContactStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ContactStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func contactStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBContact) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBContact> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.contactStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeContactStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to MessageStatusStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to MessageStatusStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func messageStatusStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBSendMessageStatus) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBSendMessageStatus> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.messageStatusStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeMessageStatusStreamInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Server streaming call to BridgeStatusStream
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to BridgeStatusStream.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func bridgeStatusStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (PBBridgeStatus) -> Void
+  ) -> ServerStreamingCall<PBEmpty, PBBridgeStatus> {
+    return self.makeServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.bridgeStatusStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeBridgeStatusStreamInterceptors() ?? [],
+      handler: handler
     )
   }
 }
@@ -126,10 +618,110 @@ public protocol BarcelonaAsyncClientProtocol: GRPCClient {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: BarcelonaClientInterceptorFactoryProtocol? { get }
 
+  func makeStartupSyncHookCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBEmpty, PBStartupSyncHookResponse>
+
   func makeRequestHistoryCall(
     _ request: PBHistoryQuery,
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<PBHistoryQuery, PBMessageList>
+
+  func makeRequestChatsCall(
+    _ request: PBChatQuery,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBChatQuery, PBChatIDList>
+
+  func makePingCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBEmpty, PBEmpty>
+
+  func makeGetContactsCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBEmpty, PBContactList>
+
+  func makeGetContactCall(
+    _ request: PBGUID,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBGUID, PBContact>
+
+  func makeGetChatCall(
+    _ request: PBGUID,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBGUID, PBChatInfo>
+
+  func makeGetChatAvatarCall(
+    _ request: PBGUID,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBGUID, PBAttachment>
+
+  func makeSendMessageCall(
+    _ request: PBSendMessageRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBSendMessageRequest, PBSendResult>
+
+  func makeSendReadReceiptCall(
+    _ request: PBSendReadReceiptRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBSendReadReceiptRequest, PBEmpty>
+
+  func makeSetTypingCall(
+    _ request: PBSetTypingRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBSetTypingRequest, PBEmpty>
+
+  func makeResolveIdentifierCall(
+    _ request: PBResolveIdentifierRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBResolveIdentifierRequest, PBResolveIdentifierResult>
+
+  func makePrepareDmCall(
+    _ request: PBPrepareDMRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBPrepareDMRequest, PBEmptyResult>
+
+  func makeLogStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBLogLine>
+
+  func makeMessageStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBMessage>
+
+  func makeReceiptStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBReadReceipt>
+
+  func makeTypingStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBTypingNotification>
+
+  func makeChatStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBChatInfo>
+
+  func makeContactStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBContact>
+
+  func makeMessageStatusStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBSendMessageStatus>
+
+  func makeBridgeStatusStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBBridgeStatus>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -140,6 +732,18 @@ extension BarcelonaAsyncClientProtocol {
 
   public var interceptors: BarcelonaClientInterceptorFactoryProtocol? {
     return nil
+  }
+
+  public func makeStartupSyncHookCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBEmpty, PBStartupSyncHookResponse> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.startupSyncHook.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeStartupSyncHookInterceptors() ?? []
+    )
   }
 
   public func makeRequestHistoryCall(
@@ -153,10 +757,250 @@ extension BarcelonaAsyncClientProtocol {
       interceptors: self.interceptors?.makeRequestHistoryInterceptors() ?? []
     )
   }
+
+  public func makeRequestChatsCall(
+    _ request: PBChatQuery,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBChatQuery, PBChatIDList> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.requestChats.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeRequestChatsInterceptors() ?? []
+    )
+  }
+
+  public func makePingCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBEmpty, PBEmpty> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.ping.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePingInterceptors() ?? []
+    )
+  }
+
+  public func makeGetContactsCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBEmpty, PBContactList> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getContacts.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetContactsInterceptors() ?? []
+    )
+  }
+
+  public func makeGetContactCall(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBGUID, PBContact> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getContact.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetContactInterceptors() ?? []
+    )
+  }
+
+  public func makeGetChatCall(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBGUID, PBChatInfo> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getChat.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetChatInterceptors() ?? []
+    )
+  }
+
+  public func makeGetChatAvatarCall(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBGUID, PBAttachment> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getChatAvatar.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetChatAvatarInterceptors() ?? []
+    )
+  }
+
+  public func makeSendMessageCall(
+    _ request: PBSendMessageRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBSendMessageRequest, PBSendResult> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.sendMessage.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSendMessageInterceptors() ?? []
+    )
+  }
+
+  public func makeSendReadReceiptCall(
+    _ request: PBSendReadReceiptRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBSendReadReceiptRequest, PBEmpty> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.sendReadReceipt.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSendReadReceiptInterceptors() ?? []
+    )
+  }
+
+  public func makeSetTypingCall(
+    _ request: PBSetTypingRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBSetTypingRequest, PBEmpty> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.setTyping.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSetTypingInterceptors() ?? []
+    )
+  }
+
+  public func makeResolveIdentifierCall(
+    _ request: PBResolveIdentifierRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBResolveIdentifierRequest, PBResolveIdentifierResult> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.resolveIdentifier.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeResolveIdentifierInterceptors() ?? []
+    )
+  }
+
+  public func makePrepareDmCall(
+    _ request: PBPrepareDMRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBPrepareDMRequest, PBEmptyResult> {
+    return self.makeAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.prepareDM.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePrepareDMInterceptors() ?? []
+    )
+  }
+
+  public func makeLogStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBLogLine> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.logStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeLogStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeMessageStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBMessage> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.messageStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeMessageStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeReceiptStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBReadReceipt> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.receiptStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeReceiptStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeTypingStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBTypingNotification> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.typingStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTypingStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeChatStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBChatInfo> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.chatStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeChatStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeContactStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBContact> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.contactStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeContactStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeMessageStatusStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBSendMessageStatus> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.messageStatusStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeMessageStatusStreamInterceptors() ?? []
+    )
+  }
+
+  public func makeBridgeStatusStreamCall(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<PBEmpty, PBBridgeStatus> {
+    return self.makeAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.bridgeStatusStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeBridgeStatusStreamInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension BarcelonaAsyncClientProtocol {
+  public func startupSyncHook(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBStartupSyncHookResponse {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.startupSyncHook.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeStartupSyncHookInterceptors() ?? []
+    )
+  }
+
   public func requestHistory(
     _ request: PBHistoryQuery,
     callOptions: CallOptions? = nil
@@ -166,6 +1010,234 @@ extension BarcelonaAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeRequestHistoryInterceptors() ?? []
+    )
+  }
+
+  public func requestChats(
+    _ request: PBChatQuery,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBChatIDList {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.requestChats.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeRequestChatsInterceptors() ?? []
+    )
+  }
+
+  public func ping(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBEmpty {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.ping.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePingInterceptors() ?? []
+    )
+  }
+
+  public func getContacts(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBContactList {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getContacts.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetContactsInterceptors() ?? []
+    )
+  }
+
+  public func getContact(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBContact {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getContact.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetContactInterceptors() ?? []
+    )
+  }
+
+  public func getChat(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBChatInfo {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getChat.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetChatInterceptors() ?? []
+    )
+  }
+
+  public func getChatAvatar(
+    _ request: PBGUID,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBAttachment {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.getChatAvatar.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetChatAvatarInterceptors() ?? []
+    )
+  }
+
+  public func sendMessage(
+    _ request: PBSendMessageRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBSendResult {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.sendMessage.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSendMessageInterceptors() ?? []
+    )
+  }
+
+  public func sendReadReceipt(
+    _ request: PBSendReadReceiptRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBEmpty {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.sendReadReceipt.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSendReadReceiptInterceptors() ?? []
+    )
+  }
+
+  public func setTyping(
+    _ request: PBSetTypingRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBEmpty {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.setTyping.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSetTypingInterceptors() ?? []
+    )
+  }
+
+  public func resolveIdentifier(
+    _ request: PBResolveIdentifierRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBResolveIdentifierResult {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.resolveIdentifier.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeResolveIdentifierInterceptors() ?? []
+    )
+  }
+
+  public func prepareDM(
+    _ request: PBPrepareDMRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBEmptyResult {
+    return try await self.performAsyncUnaryCall(
+      path: BarcelonaClientMetadata.Methods.prepareDM.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePrepareDMInterceptors() ?? []
+    )
+  }
+
+  public func logStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBLogLine> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.logStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeLogStreamInterceptors() ?? []
+    )
+  }
+
+  public func messageStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBMessage> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.messageStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeMessageStreamInterceptors() ?? []
+    )
+  }
+
+  public func receiptStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBReadReceipt> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.receiptStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeReceiptStreamInterceptors() ?? []
+    )
+  }
+
+  public func typingStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBTypingNotification> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.typingStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTypingStreamInterceptors() ?? []
+    )
+  }
+
+  public func chatStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBChatInfo> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.chatStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeChatStreamInterceptors() ?? []
+    )
+  }
+
+  public func contactStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBContact> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.contactStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeContactStreamInterceptors() ?? []
+    )
+  }
+
+  public func messageStatusStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBSendMessageStatus> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.messageStatusStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeMessageStatusStreamInterceptors() ?? []
+    )
+  }
+
+  public func bridgeStatusStream(
+    _ request: PBEmpty,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<PBBridgeStatus> {
+    return self.performAsyncServerStreamingCall(
+      path: BarcelonaClientMetadata.Methods.bridgeStatusStream.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeBridgeStatusStreamInterceptors() ?? []
     )
   }
 }
@@ -191,8 +1263,68 @@ public struct BarcelonaAsyncClient: BarcelonaAsyncClientProtocol {
 
 public protocol BarcelonaClientInterceptorFactoryProtocol: GRPCSendable {
 
+  /// - Returns: Interceptors to use when invoking 'startupSyncHook'.
+  func makeStartupSyncHookInterceptors() -> [ClientInterceptor<PBEmpty, PBStartupSyncHookResponse>]
+
   /// - Returns: Interceptors to use when invoking 'requestHistory'.
   func makeRequestHistoryInterceptors() -> [ClientInterceptor<PBHistoryQuery, PBMessageList>]
+
+  /// - Returns: Interceptors to use when invoking 'requestChats'.
+  func makeRequestChatsInterceptors() -> [ClientInterceptor<PBChatQuery, PBChatIDList>]
+
+  /// - Returns: Interceptors to use when invoking 'ping'.
+  func makePingInterceptors() -> [ClientInterceptor<PBEmpty, PBEmpty>]
+
+  /// - Returns: Interceptors to use when invoking 'getContacts'.
+  func makeGetContactsInterceptors() -> [ClientInterceptor<PBEmpty, PBContactList>]
+
+  /// - Returns: Interceptors to use when invoking 'getContact'.
+  func makeGetContactInterceptors() -> [ClientInterceptor<PBGUID, PBContact>]
+
+  /// - Returns: Interceptors to use when invoking 'getChat'.
+  func makeGetChatInterceptors() -> [ClientInterceptor<PBGUID, PBChatInfo>]
+
+  /// - Returns: Interceptors to use when invoking 'getChatAvatar'.
+  func makeGetChatAvatarInterceptors() -> [ClientInterceptor<PBGUID, PBAttachment>]
+
+  /// - Returns: Interceptors to use when invoking 'sendMessage'.
+  func makeSendMessageInterceptors() -> [ClientInterceptor<PBSendMessageRequest, PBSendResult>]
+
+  /// - Returns: Interceptors to use when invoking 'sendReadReceipt'.
+  func makeSendReadReceiptInterceptors() -> [ClientInterceptor<PBSendReadReceiptRequest, PBEmpty>]
+
+  /// - Returns: Interceptors to use when invoking 'setTyping'.
+  func makeSetTypingInterceptors() -> [ClientInterceptor<PBSetTypingRequest, PBEmpty>]
+
+  /// - Returns: Interceptors to use when invoking 'resolveIdentifier'.
+  func makeResolveIdentifierInterceptors() -> [ClientInterceptor<PBResolveIdentifierRequest, PBResolveIdentifierResult>]
+
+  /// - Returns: Interceptors to use when invoking 'prepareDM'.
+  func makePrepareDMInterceptors() -> [ClientInterceptor<PBPrepareDMRequest, PBEmptyResult>]
+
+  /// - Returns: Interceptors to use when invoking 'logStream'.
+  func makeLogStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBLogLine>]
+
+  /// - Returns: Interceptors to use when invoking 'messageStream'.
+  func makeMessageStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBMessage>]
+
+  /// - Returns: Interceptors to use when invoking 'receiptStream'.
+  func makeReceiptStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBReadReceipt>]
+
+  /// - Returns: Interceptors to use when invoking 'typingStream'.
+  func makeTypingStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBTypingNotification>]
+
+  /// - Returns: Interceptors to use when invoking 'chatStream'.
+  func makeChatStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBChatInfo>]
+
+  /// - Returns: Interceptors to use when invoking 'contactStream'.
+  func makeContactStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBContact>]
+
+  /// - Returns: Interceptors to use when invoking 'messageStatusStream'.
+  func makeMessageStatusStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBSendMessageStatus>]
+
+  /// - Returns: Interceptors to use when invoking 'bridgeStatusStream'.
+  func makeBridgeStatusStreamInterceptors() -> [ClientInterceptor<PBEmpty, PBBridgeStatus>]
 }
 
 public enum BarcelonaClientMetadata {
@@ -200,15 +1332,155 @@ public enum BarcelonaClientMetadata {
     name: "Barcelona",
     fullName: "Barcelona",
     methods: [
+      BarcelonaClientMetadata.Methods.startupSyncHook,
       BarcelonaClientMetadata.Methods.requestHistory,
+      BarcelonaClientMetadata.Methods.requestChats,
+      BarcelonaClientMetadata.Methods.ping,
+      BarcelonaClientMetadata.Methods.getContacts,
+      BarcelonaClientMetadata.Methods.getContact,
+      BarcelonaClientMetadata.Methods.getChat,
+      BarcelonaClientMetadata.Methods.getChatAvatar,
+      BarcelonaClientMetadata.Methods.sendMessage,
+      BarcelonaClientMetadata.Methods.sendReadReceipt,
+      BarcelonaClientMetadata.Methods.setTyping,
+      BarcelonaClientMetadata.Methods.resolveIdentifier,
+      BarcelonaClientMetadata.Methods.prepareDM,
+      BarcelonaClientMetadata.Methods.logStream,
+      BarcelonaClientMetadata.Methods.messageStream,
+      BarcelonaClientMetadata.Methods.receiptStream,
+      BarcelonaClientMetadata.Methods.typingStream,
+      BarcelonaClientMetadata.Methods.chatStream,
+      BarcelonaClientMetadata.Methods.contactStream,
+      BarcelonaClientMetadata.Methods.messageStatusStream,
+      BarcelonaClientMetadata.Methods.bridgeStatusStream,
     ]
   )
 
   public enum Methods {
+    public static let startupSyncHook = GRPCMethodDescriptor(
+      name: "StartupSyncHook",
+      path: "/Barcelona/StartupSyncHook",
+      type: GRPCCallType.unary
+    )
+
     public static let requestHistory = GRPCMethodDescriptor(
       name: "RequestHistory",
       path: "/Barcelona/RequestHistory",
       type: GRPCCallType.unary
+    )
+
+    public static let requestChats = GRPCMethodDescriptor(
+      name: "RequestChats",
+      path: "/Barcelona/RequestChats",
+      type: GRPCCallType.unary
+    )
+
+    public static let ping = GRPCMethodDescriptor(
+      name: "Ping",
+      path: "/Barcelona/Ping",
+      type: GRPCCallType.unary
+    )
+
+    public static let getContacts = GRPCMethodDescriptor(
+      name: "GetContacts",
+      path: "/Barcelona/GetContacts",
+      type: GRPCCallType.unary
+    )
+
+    public static let getContact = GRPCMethodDescriptor(
+      name: "GetContact",
+      path: "/Barcelona/GetContact",
+      type: GRPCCallType.unary
+    )
+
+    public static let getChat = GRPCMethodDescriptor(
+      name: "GetChat",
+      path: "/Barcelona/GetChat",
+      type: GRPCCallType.unary
+    )
+
+    public static let getChatAvatar = GRPCMethodDescriptor(
+      name: "GetChatAvatar",
+      path: "/Barcelona/GetChatAvatar",
+      type: GRPCCallType.unary
+    )
+
+    public static let sendMessage = GRPCMethodDescriptor(
+      name: "SendMessage",
+      path: "/Barcelona/SendMessage",
+      type: GRPCCallType.unary
+    )
+
+    public static let sendReadReceipt = GRPCMethodDescriptor(
+      name: "SendReadReceipt",
+      path: "/Barcelona/SendReadReceipt",
+      type: GRPCCallType.unary
+    )
+
+    public static let setTyping = GRPCMethodDescriptor(
+      name: "SetTyping",
+      path: "/Barcelona/SetTyping",
+      type: GRPCCallType.unary
+    )
+
+    public static let resolveIdentifier = GRPCMethodDescriptor(
+      name: "ResolveIdentifier",
+      path: "/Barcelona/ResolveIdentifier",
+      type: GRPCCallType.unary
+    )
+
+    public static let prepareDM = GRPCMethodDescriptor(
+      name: "PrepareDM",
+      path: "/Barcelona/PrepareDM",
+      type: GRPCCallType.unary
+    )
+
+    public static let logStream = GRPCMethodDescriptor(
+      name: "LogStream",
+      path: "/Barcelona/LogStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let messageStream = GRPCMethodDescriptor(
+      name: "MessageStream",
+      path: "/Barcelona/MessageStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let receiptStream = GRPCMethodDescriptor(
+      name: "ReceiptStream",
+      path: "/Barcelona/ReceiptStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let typingStream = GRPCMethodDescriptor(
+      name: "TypingStream",
+      path: "/Barcelona/TypingStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let chatStream = GRPCMethodDescriptor(
+      name: "ChatStream",
+      path: "/Barcelona/ChatStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let contactStream = GRPCMethodDescriptor(
+      name: "ContactStream",
+      path: "/Barcelona/ContactStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let messageStatusStream = GRPCMethodDescriptor(
+      name: "MessageStatusStream",
+      path: "/Barcelona/MessageStatusStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let bridgeStatusStream = GRPCMethodDescriptor(
+      name: "BridgeStatusStream",
+      path: "/Barcelona/BridgeStatusStream",
+      type: GRPCCallType.serverStreaming
     )
   }
 }
@@ -217,11 +1489,57 @@ public enum BarcelonaClientMetadata {
 public protocol BridgeClientProtocol: GRPCClient {
   var serviceName: String { get }
   var interceptors: BridgeClientInterceptorFactoryProtocol? { get }
+
+  func barcelonaReady(
+    _ request: PBBarcelonaStartupInfo,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBBarcelonaStartupInfo, PBEmpty>
+
+  func transferRetrievalFailed(
+    _ request: PBError,
+    callOptions: CallOptions?
+  ) -> UnaryCall<PBError, PBEmpty>
 }
 
 extension BridgeClientProtocol {
   public var serviceName: String {
     return "Bridge"
+  }
+
+  /// Unary call to BarcelonaReady
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to BarcelonaReady.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func barcelonaReady(
+    _ request: PBBarcelonaStartupInfo,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBBarcelonaStartupInfo, PBEmpty> {
+    return self.makeUnaryCall(
+      path: BridgeClientMetadata.Methods.barcelonaReady.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeBarcelonaReadyInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to TransferRetrievalFailed
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to TransferRetrievalFailed.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func transferRetrievalFailed(
+    _ request: PBError,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<PBError, PBEmpty> {
+    return self.makeUnaryCall(
+      path: BridgeClientMetadata.Methods.transferRetrievalFailed.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTransferRetrievalFailedInterceptors() ?? []
+    )
   }
 }
 
@@ -289,6 +1607,16 @@ public struct BridgeNIOClient: BridgeClientProtocol {
 public protocol BridgeAsyncClientProtocol: GRPCClient {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: BridgeClientInterceptorFactoryProtocol? { get }
+
+  func makeBarcelonaReadyCall(
+    _ request: PBBarcelonaStartupInfo,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBBarcelonaStartupInfo, PBEmpty>
+
+  func makeTransferRetrievalFailedCall(
+    _ request: PBError,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<PBError, PBEmpty>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -300,10 +1628,57 @@ extension BridgeAsyncClientProtocol {
   public var interceptors: BridgeClientInterceptorFactoryProtocol? {
     return nil
   }
+
+  public func makeBarcelonaReadyCall(
+    _ request: PBBarcelonaStartupInfo,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBBarcelonaStartupInfo, PBEmpty> {
+    return self.makeAsyncUnaryCall(
+      path: BridgeClientMetadata.Methods.barcelonaReady.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeBarcelonaReadyInterceptors() ?? []
+    )
+  }
+
+  public func makeTransferRetrievalFailedCall(
+    _ request: PBError,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<PBError, PBEmpty> {
+    return self.makeAsyncUnaryCall(
+      path: BridgeClientMetadata.Methods.transferRetrievalFailed.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTransferRetrievalFailedInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension BridgeAsyncClientProtocol {
+  public func barcelonaReady(
+    _ request: PBBarcelonaStartupInfo,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBEmpty {
+    return try await self.performAsyncUnaryCall(
+      path: BridgeClientMetadata.Methods.barcelonaReady.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeBarcelonaReadyInterceptors() ?? []
+    )
+  }
+
+  public func transferRetrievalFailed(
+    _ request: PBError,
+    callOptions: CallOptions? = nil
+  ) async throws -> PBEmpty {
+    return try await self.performAsyncUnaryCall(
+      path: BridgeClientMetadata.Methods.transferRetrievalFailed.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTransferRetrievalFailedInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -326,6 +1701,12 @@ public struct BridgeAsyncClient: BridgeAsyncClientProtocol {
 #endif // compiler(>=5.6)
 
 public protocol BridgeClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'barcelonaReady'.
+  func makeBarcelonaReadyInterceptors() -> [ClientInterceptor<PBBarcelonaStartupInfo, PBEmpty>]
+
+  /// - Returns: Interceptors to use when invoking 'transferRetrievalFailed'.
+  func makeTransferRetrievalFailedInterceptors() -> [ClientInterceptor<PBError, PBEmpty>]
 }
 
 public enum BridgeClientMetadata {
@@ -333,10 +1714,23 @@ public enum BridgeClientMetadata {
     name: "Bridge",
     fullName: "Bridge",
     methods: [
+      BridgeClientMetadata.Methods.barcelonaReady,
+      BridgeClientMetadata.Methods.transferRetrievalFailed,
     ]
   )
 
   public enum Methods {
+    public static let barcelonaReady = GRPCMethodDescriptor(
+      name: "BarcelonaReady",
+      path: "/Bridge/BarcelonaReady",
+      type: GRPCCallType.unary
+    )
+
+    public static let transferRetrievalFailed = GRPCMethodDescriptor(
+      name: "TransferRetrievalFailed",
+      path: "/Bridge/TransferRetrievalFailed",
+      type: GRPCCallType.unary
+    )
   }
 }
 
@@ -344,7 +1738,47 @@ public enum BridgeClientMetadata {
 public protocol BarcelonaProvider: CallHandlerProvider {
   var interceptors: BarcelonaServerInterceptorFactoryProtocol? { get }
 
+  func startupSyncHook(request: PBEmpty, context: StatusOnlyCallContext) -> EventLoopFuture<PBStartupSyncHookResponse>
+
   func requestHistory(request: PBHistoryQuery, context: StatusOnlyCallContext) -> EventLoopFuture<PBMessageList>
+
+  func requestChats(request: PBChatQuery, context: StatusOnlyCallContext) -> EventLoopFuture<PBChatIDList>
+
+  func ping(request: PBEmpty, context: StatusOnlyCallContext) -> EventLoopFuture<PBEmpty>
+
+  func getContacts(request: PBEmpty, context: StatusOnlyCallContext) -> EventLoopFuture<PBContactList>
+
+  func getContact(request: PBGUID, context: StatusOnlyCallContext) -> EventLoopFuture<PBContact>
+
+  func getChat(request: PBGUID, context: StatusOnlyCallContext) -> EventLoopFuture<PBChatInfo>
+
+  func getChatAvatar(request: PBGUID, context: StatusOnlyCallContext) -> EventLoopFuture<PBAttachment>
+
+  func sendMessage(request: PBSendMessageRequest, context: StatusOnlyCallContext) -> EventLoopFuture<PBSendResult>
+
+  func sendReadReceipt(request: PBSendReadReceiptRequest, context: StatusOnlyCallContext) -> EventLoopFuture<PBEmpty>
+
+  func setTyping(request: PBSetTypingRequest, context: StatusOnlyCallContext) -> EventLoopFuture<PBEmpty>
+
+  func resolveIdentifier(request: PBResolveIdentifierRequest, context: StatusOnlyCallContext) -> EventLoopFuture<PBResolveIdentifierResult>
+
+  func prepareDM(request: PBPrepareDMRequest, context: StatusOnlyCallContext) -> EventLoopFuture<PBEmptyResult>
+
+  func logStream(request: PBEmpty, context: StreamingResponseCallContext<PBLogLine>) -> EventLoopFuture<GRPCStatus>
+
+  func messageStream(request: PBEmpty, context: StreamingResponseCallContext<PBMessage>) -> EventLoopFuture<GRPCStatus>
+
+  func receiptStream(request: PBEmpty, context: StreamingResponseCallContext<PBReadReceipt>) -> EventLoopFuture<GRPCStatus>
+
+  func typingStream(request: PBEmpty, context: StreamingResponseCallContext<PBTypingNotification>) -> EventLoopFuture<GRPCStatus>
+
+  func chatStream(request: PBEmpty, context: StreamingResponseCallContext<PBChatInfo>) -> EventLoopFuture<GRPCStatus>
+
+  func contactStream(request: PBEmpty, context: StreamingResponseCallContext<PBContact>) -> EventLoopFuture<GRPCStatus>
+
+  func messageStatusStream(request: PBEmpty, context: StreamingResponseCallContext<PBSendMessageStatus>) -> EventLoopFuture<GRPCStatus>
+
+  func bridgeStatusStream(request: PBEmpty, context: StreamingResponseCallContext<PBBridgeStatus>) -> EventLoopFuture<GRPCStatus>
 }
 
 extension BarcelonaProvider {
@@ -359,6 +1793,15 @@ extension BarcelonaProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "StartupSyncHook":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBStartupSyncHookResponse>(),
+        interceptors: self.interceptors?.makeStartupSyncHookInterceptors() ?? [],
+        userFunction: self.startupSyncHook(request:context:)
+      )
+
     case "RequestHistory":
       return UnaryServerHandler(
         context: context,
@@ -366,6 +1809,177 @@ extension BarcelonaProvider {
         responseSerializer: ProtobufSerializer<PBMessageList>(),
         interceptors: self.interceptors?.makeRequestHistoryInterceptors() ?? [],
         userFunction: self.requestHistory(request:context:)
+      )
+
+    case "RequestChats":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBChatQuery>(),
+        responseSerializer: ProtobufSerializer<PBChatIDList>(),
+        interceptors: self.interceptors?.makeRequestChatsInterceptors() ?? [],
+        userFunction: self.requestChats(request:context:)
+      )
+
+    case "Ping":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makePingInterceptors() ?? [],
+        userFunction: self.ping(request:context:)
+      )
+
+    case "GetContacts":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBContactList>(),
+        interceptors: self.interceptors?.makeGetContactsInterceptors() ?? [],
+        userFunction: self.getContacts(request:context:)
+      )
+
+    case "GetContact":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBGUID>(),
+        responseSerializer: ProtobufSerializer<PBContact>(),
+        interceptors: self.interceptors?.makeGetContactInterceptors() ?? [],
+        userFunction: self.getContact(request:context:)
+      )
+
+    case "GetChat":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBGUID>(),
+        responseSerializer: ProtobufSerializer<PBChatInfo>(),
+        interceptors: self.interceptors?.makeGetChatInterceptors() ?? [],
+        userFunction: self.getChat(request:context:)
+      )
+
+    case "GetChatAvatar":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBGUID>(),
+        responseSerializer: ProtobufSerializer<PBAttachment>(),
+        interceptors: self.interceptors?.makeGetChatAvatarInterceptors() ?? [],
+        userFunction: self.getChatAvatar(request:context:)
+      )
+
+    case "SendMessage":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBSendMessageRequest>(),
+        responseSerializer: ProtobufSerializer<PBSendResult>(),
+        interceptors: self.interceptors?.makeSendMessageInterceptors() ?? [],
+        userFunction: self.sendMessage(request:context:)
+      )
+
+    case "SendReadReceipt":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBSendReadReceiptRequest>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeSendReadReceiptInterceptors() ?? [],
+        userFunction: self.sendReadReceipt(request:context:)
+      )
+
+    case "SetTyping":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBSetTypingRequest>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeSetTypingInterceptors() ?? [],
+        userFunction: self.setTyping(request:context:)
+      )
+
+    case "ResolveIdentifier":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBResolveIdentifierRequest>(),
+        responseSerializer: ProtobufSerializer<PBResolveIdentifierResult>(),
+        interceptors: self.interceptors?.makeResolveIdentifierInterceptors() ?? [],
+        userFunction: self.resolveIdentifier(request:context:)
+      )
+
+    case "PrepareDM":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBPrepareDMRequest>(),
+        responseSerializer: ProtobufSerializer<PBEmptyResult>(),
+        interceptors: self.interceptors?.makePrepareDMInterceptors() ?? [],
+        userFunction: self.prepareDM(request:context:)
+      )
+
+    case "LogStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBLogLine>(),
+        interceptors: self.interceptors?.makeLogStreamInterceptors() ?? [],
+        userFunction: self.logStream(request:context:)
+      )
+
+    case "MessageStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBMessage>(),
+        interceptors: self.interceptors?.makeMessageStreamInterceptors() ?? [],
+        userFunction: self.messageStream(request:context:)
+      )
+
+    case "ReceiptStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBReadReceipt>(),
+        interceptors: self.interceptors?.makeReceiptStreamInterceptors() ?? [],
+        userFunction: self.receiptStream(request:context:)
+      )
+
+    case "TypingStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBTypingNotification>(),
+        interceptors: self.interceptors?.makeTypingStreamInterceptors() ?? [],
+        userFunction: self.typingStream(request:context:)
+      )
+
+    case "ChatStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBChatInfo>(),
+        interceptors: self.interceptors?.makeChatStreamInterceptors() ?? [],
+        userFunction: self.chatStream(request:context:)
+      )
+
+    case "ContactStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBContact>(),
+        interceptors: self.interceptors?.makeContactStreamInterceptors() ?? [],
+        userFunction: self.contactStream(request:context:)
+      )
+
+    case "MessageStatusStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBSendMessageStatus>(),
+        interceptors: self.interceptors?.makeMessageStatusStreamInterceptors() ?? [],
+        userFunction: self.messageStatusStream(request:context:)
+      )
+
+    case "BridgeStatusStream":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBBridgeStatus>(),
+        interceptors: self.interceptors?.makeBridgeStatusStreamInterceptors() ?? [],
+        userFunction: self.bridgeStatusStream(request:context:)
       )
 
     default:
@@ -382,10 +1996,118 @@ public protocol BarcelonaAsyncProvider: CallHandlerProvider {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: BarcelonaServerInterceptorFactoryProtocol? { get }
 
+  @Sendable func startupSyncHook(
+    request: PBEmpty,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBStartupSyncHookResponse
+
   @Sendable func requestHistory(
     request: PBHistoryQuery,
     context: GRPCAsyncServerCallContext
   ) async throws -> PBMessageList
+
+  @Sendable func requestChats(
+    request: PBChatQuery,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBChatIDList
+
+  @Sendable func ping(
+    request: PBEmpty,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBEmpty
+
+  @Sendable func getContacts(
+    request: PBEmpty,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBContactList
+
+  @Sendable func getContact(
+    request: PBGUID,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBContact
+
+  @Sendable func getChat(
+    request: PBGUID,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBChatInfo
+
+  @Sendable func getChatAvatar(
+    request: PBGUID,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBAttachment
+
+  @Sendable func sendMessage(
+    request: PBSendMessageRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBSendResult
+
+  @Sendable func sendReadReceipt(
+    request: PBSendReadReceiptRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBEmpty
+
+  @Sendable func setTyping(
+    request: PBSetTypingRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBEmpty
+
+  @Sendable func resolveIdentifier(
+    request: PBResolveIdentifierRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBResolveIdentifierResult
+
+  @Sendable func prepareDM(
+    request: PBPrepareDMRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBEmptyResult
+
+  @Sendable func logStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBLogLine>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func messageStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBMessage>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func receiptStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBReadReceipt>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func typingStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBTypingNotification>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func chatStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBChatInfo>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func contactStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBContact>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func messageStatusStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBSendMessageStatus>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  @Sendable func bridgeStatusStream(
+    request: PBEmpty,
+    responseStream: GRPCAsyncResponseStreamWriter<PBBridgeStatus>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -407,6 +2129,15 @@ extension BarcelonaAsyncProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "StartupSyncHook":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBStartupSyncHookResponse>(),
+        interceptors: self.interceptors?.makeStartupSyncHookInterceptors() ?? [],
+        wrapping: self.startupSyncHook(request:context:)
+      )
+
     case "RequestHistory":
       return GRPCAsyncServerHandler(
         context: context,
@@ -414,6 +2145,177 @@ extension BarcelonaAsyncProvider {
         responseSerializer: ProtobufSerializer<PBMessageList>(),
         interceptors: self.interceptors?.makeRequestHistoryInterceptors() ?? [],
         wrapping: self.requestHistory(request:context:)
+      )
+
+    case "RequestChats":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBChatQuery>(),
+        responseSerializer: ProtobufSerializer<PBChatIDList>(),
+        interceptors: self.interceptors?.makeRequestChatsInterceptors() ?? [],
+        wrapping: self.requestChats(request:context:)
+      )
+
+    case "Ping":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makePingInterceptors() ?? [],
+        wrapping: self.ping(request:context:)
+      )
+
+    case "GetContacts":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBContactList>(),
+        interceptors: self.interceptors?.makeGetContactsInterceptors() ?? [],
+        wrapping: self.getContacts(request:context:)
+      )
+
+    case "GetContact":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBGUID>(),
+        responseSerializer: ProtobufSerializer<PBContact>(),
+        interceptors: self.interceptors?.makeGetContactInterceptors() ?? [],
+        wrapping: self.getContact(request:context:)
+      )
+
+    case "GetChat":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBGUID>(),
+        responseSerializer: ProtobufSerializer<PBChatInfo>(),
+        interceptors: self.interceptors?.makeGetChatInterceptors() ?? [],
+        wrapping: self.getChat(request:context:)
+      )
+
+    case "GetChatAvatar":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBGUID>(),
+        responseSerializer: ProtobufSerializer<PBAttachment>(),
+        interceptors: self.interceptors?.makeGetChatAvatarInterceptors() ?? [],
+        wrapping: self.getChatAvatar(request:context:)
+      )
+
+    case "SendMessage":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBSendMessageRequest>(),
+        responseSerializer: ProtobufSerializer<PBSendResult>(),
+        interceptors: self.interceptors?.makeSendMessageInterceptors() ?? [],
+        wrapping: self.sendMessage(request:context:)
+      )
+
+    case "SendReadReceipt":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBSendReadReceiptRequest>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeSendReadReceiptInterceptors() ?? [],
+        wrapping: self.sendReadReceipt(request:context:)
+      )
+
+    case "SetTyping":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBSetTypingRequest>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeSetTypingInterceptors() ?? [],
+        wrapping: self.setTyping(request:context:)
+      )
+
+    case "ResolveIdentifier":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBResolveIdentifierRequest>(),
+        responseSerializer: ProtobufSerializer<PBResolveIdentifierResult>(),
+        interceptors: self.interceptors?.makeResolveIdentifierInterceptors() ?? [],
+        wrapping: self.resolveIdentifier(request:context:)
+      )
+
+    case "PrepareDM":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBPrepareDMRequest>(),
+        responseSerializer: ProtobufSerializer<PBEmptyResult>(),
+        interceptors: self.interceptors?.makePrepareDMInterceptors() ?? [],
+        wrapping: self.prepareDM(request:context:)
+      )
+
+    case "LogStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBLogLine>(),
+        interceptors: self.interceptors?.makeLogStreamInterceptors() ?? [],
+        wrapping: self.logStream(request:responseStream:context:)
+      )
+
+    case "MessageStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBMessage>(),
+        interceptors: self.interceptors?.makeMessageStreamInterceptors() ?? [],
+        wrapping: self.messageStream(request:responseStream:context:)
+      )
+
+    case "ReceiptStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBReadReceipt>(),
+        interceptors: self.interceptors?.makeReceiptStreamInterceptors() ?? [],
+        wrapping: self.receiptStream(request:responseStream:context:)
+      )
+
+    case "TypingStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBTypingNotification>(),
+        interceptors: self.interceptors?.makeTypingStreamInterceptors() ?? [],
+        wrapping: self.typingStream(request:responseStream:context:)
+      )
+
+    case "ChatStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBChatInfo>(),
+        interceptors: self.interceptors?.makeChatStreamInterceptors() ?? [],
+        wrapping: self.chatStream(request:responseStream:context:)
+      )
+
+    case "ContactStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBContact>(),
+        interceptors: self.interceptors?.makeContactStreamInterceptors() ?? [],
+        wrapping: self.contactStream(request:responseStream:context:)
+      )
+
+    case "MessageStatusStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBSendMessageStatus>(),
+        interceptors: self.interceptors?.makeMessageStatusStreamInterceptors() ?? [],
+        wrapping: self.messageStatusStream(request:responseStream:context:)
+      )
+
+    case "BridgeStatusStream":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBEmpty>(),
+        responseSerializer: ProtobufSerializer<PBBridgeStatus>(),
+        interceptors: self.interceptors?.makeBridgeStatusStreamInterceptors() ?? [],
+        wrapping: self.bridgeStatusStream(request:responseStream:context:)
       )
 
     default:
@@ -426,9 +2328,89 @@ extension BarcelonaAsyncProvider {
 
 public protocol BarcelonaServerInterceptorFactoryProtocol {
 
+  /// - Returns: Interceptors to use when handling 'startupSyncHook'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeStartupSyncHookInterceptors() -> [ServerInterceptor<PBEmpty, PBStartupSyncHookResponse>]
+
   /// - Returns: Interceptors to use when handling 'requestHistory'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeRequestHistoryInterceptors() -> [ServerInterceptor<PBHistoryQuery, PBMessageList>]
+
+  /// - Returns: Interceptors to use when handling 'requestChats'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeRequestChatsInterceptors() -> [ServerInterceptor<PBChatQuery, PBChatIDList>]
+
+  /// - Returns: Interceptors to use when handling 'ping'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makePingInterceptors() -> [ServerInterceptor<PBEmpty, PBEmpty>]
+
+  /// - Returns: Interceptors to use when handling 'getContacts'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetContactsInterceptors() -> [ServerInterceptor<PBEmpty, PBContactList>]
+
+  /// - Returns: Interceptors to use when handling 'getContact'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetContactInterceptors() -> [ServerInterceptor<PBGUID, PBContact>]
+
+  /// - Returns: Interceptors to use when handling 'getChat'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetChatInterceptors() -> [ServerInterceptor<PBGUID, PBChatInfo>]
+
+  /// - Returns: Interceptors to use when handling 'getChatAvatar'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetChatAvatarInterceptors() -> [ServerInterceptor<PBGUID, PBAttachment>]
+
+  /// - Returns: Interceptors to use when handling 'sendMessage'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeSendMessageInterceptors() -> [ServerInterceptor<PBSendMessageRequest, PBSendResult>]
+
+  /// - Returns: Interceptors to use when handling 'sendReadReceipt'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeSendReadReceiptInterceptors() -> [ServerInterceptor<PBSendReadReceiptRequest, PBEmpty>]
+
+  /// - Returns: Interceptors to use when handling 'setTyping'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeSetTypingInterceptors() -> [ServerInterceptor<PBSetTypingRequest, PBEmpty>]
+
+  /// - Returns: Interceptors to use when handling 'resolveIdentifier'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeResolveIdentifierInterceptors() -> [ServerInterceptor<PBResolveIdentifierRequest, PBResolveIdentifierResult>]
+
+  /// - Returns: Interceptors to use when handling 'prepareDM'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makePrepareDMInterceptors() -> [ServerInterceptor<PBPrepareDMRequest, PBEmptyResult>]
+
+  /// - Returns: Interceptors to use when handling 'logStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeLogStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBLogLine>]
+
+  /// - Returns: Interceptors to use when handling 'messageStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeMessageStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBMessage>]
+
+  /// - Returns: Interceptors to use when handling 'receiptStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeReceiptStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBReadReceipt>]
+
+  /// - Returns: Interceptors to use when handling 'typingStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeTypingStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBTypingNotification>]
+
+  /// - Returns: Interceptors to use when handling 'chatStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeChatStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBChatInfo>]
+
+  /// - Returns: Interceptors to use when handling 'contactStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeContactStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBContact>]
+
+  /// - Returns: Interceptors to use when handling 'messageStatusStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeMessageStatusStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBSendMessageStatus>]
+
+  /// - Returns: Interceptors to use when handling 'bridgeStatusStream'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeBridgeStatusStreamInterceptors() -> [ServerInterceptor<PBEmpty, PBBridgeStatus>]
 }
 
 public enum BarcelonaServerMetadata {
@@ -436,21 +2418,165 @@ public enum BarcelonaServerMetadata {
     name: "Barcelona",
     fullName: "Barcelona",
     methods: [
+      BarcelonaServerMetadata.Methods.startupSyncHook,
       BarcelonaServerMetadata.Methods.requestHistory,
+      BarcelonaServerMetadata.Methods.requestChats,
+      BarcelonaServerMetadata.Methods.ping,
+      BarcelonaServerMetadata.Methods.getContacts,
+      BarcelonaServerMetadata.Methods.getContact,
+      BarcelonaServerMetadata.Methods.getChat,
+      BarcelonaServerMetadata.Methods.getChatAvatar,
+      BarcelonaServerMetadata.Methods.sendMessage,
+      BarcelonaServerMetadata.Methods.sendReadReceipt,
+      BarcelonaServerMetadata.Methods.setTyping,
+      BarcelonaServerMetadata.Methods.resolveIdentifier,
+      BarcelonaServerMetadata.Methods.prepareDM,
+      BarcelonaServerMetadata.Methods.logStream,
+      BarcelonaServerMetadata.Methods.messageStream,
+      BarcelonaServerMetadata.Methods.receiptStream,
+      BarcelonaServerMetadata.Methods.typingStream,
+      BarcelonaServerMetadata.Methods.chatStream,
+      BarcelonaServerMetadata.Methods.contactStream,
+      BarcelonaServerMetadata.Methods.messageStatusStream,
+      BarcelonaServerMetadata.Methods.bridgeStatusStream,
     ]
   )
 
   public enum Methods {
+    public static let startupSyncHook = GRPCMethodDescriptor(
+      name: "StartupSyncHook",
+      path: "/Barcelona/StartupSyncHook",
+      type: GRPCCallType.unary
+    )
+
     public static let requestHistory = GRPCMethodDescriptor(
       name: "RequestHistory",
       path: "/Barcelona/RequestHistory",
       type: GRPCCallType.unary
+    )
+
+    public static let requestChats = GRPCMethodDescriptor(
+      name: "RequestChats",
+      path: "/Barcelona/RequestChats",
+      type: GRPCCallType.unary
+    )
+
+    public static let ping = GRPCMethodDescriptor(
+      name: "Ping",
+      path: "/Barcelona/Ping",
+      type: GRPCCallType.unary
+    )
+
+    public static let getContacts = GRPCMethodDescriptor(
+      name: "GetContacts",
+      path: "/Barcelona/GetContacts",
+      type: GRPCCallType.unary
+    )
+
+    public static let getContact = GRPCMethodDescriptor(
+      name: "GetContact",
+      path: "/Barcelona/GetContact",
+      type: GRPCCallType.unary
+    )
+
+    public static let getChat = GRPCMethodDescriptor(
+      name: "GetChat",
+      path: "/Barcelona/GetChat",
+      type: GRPCCallType.unary
+    )
+
+    public static let getChatAvatar = GRPCMethodDescriptor(
+      name: "GetChatAvatar",
+      path: "/Barcelona/GetChatAvatar",
+      type: GRPCCallType.unary
+    )
+
+    public static let sendMessage = GRPCMethodDescriptor(
+      name: "SendMessage",
+      path: "/Barcelona/SendMessage",
+      type: GRPCCallType.unary
+    )
+
+    public static let sendReadReceipt = GRPCMethodDescriptor(
+      name: "SendReadReceipt",
+      path: "/Barcelona/SendReadReceipt",
+      type: GRPCCallType.unary
+    )
+
+    public static let setTyping = GRPCMethodDescriptor(
+      name: "SetTyping",
+      path: "/Barcelona/SetTyping",
+      type: GRPCCallType.unary
+    )
+
+    public static let resolveIdentifier = GRPCMethodDescriptor(
+      name: "ResolveIdentifier",
+      path: "/Barcelona/ResolveIdentifier",
+      type: GRPCCallType.unary
+    )
+
+    public static let prepareDM = GRPCMethodDescriptor(
+      name: "PrepareDM",
+      path: "/Barcelona/PrepareDM",
+      type: GRPCCallType.unary
+    )
+
+    public static let logStream = GRPCMethodDescriptor(
+      name: "LogStream",
+      path: "/Barcelona/LogStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let messageStream = GRPCMethodDescriptor(
+      name: "MessageStream",
+      path: "/Barcelona/MessageStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let receiptStream = GRPCMethodDescriptor(
+      name: "ReceiptStream",
+      path: "/Barcelona/ReceiptStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let typingStream = GRPCMethodDescriptor(
+      name: "TypingStream",
+      path: "/Barcelona/TypingStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let chatStream = GRPCMethodDescriptor(
+      name: "ChatStream",
+      path: "/Barcelona/ChatStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let contactStream = GRPCMethodDescriptor(
+      name: "ContactStream",
+      path: "/Barcelona/ContactStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let messageStatusStream = GRPCMethodDescriptor(
+      name: "MessageStatusStream",
+      path: "/Barcelona/MessageStatusStream",
+      type: GRPCCallType.serverStreaming
+    )
+
+    public static let bridgeStatusStream = GRPCMethodDescriptor(
+      name: "BridgeStatusStream",
+      path: "/Barcelona/BridgeStatusStream",
+      type: GRPCCallType.serverStreaming
     )
   }
 }
 /// To build a server, implement a class that conforms to this protocol.
 public protocol BridgeProvider: CallHandlerProvider {
   var interceptors: BridgeServerInterceptorFactoryProtocol? { get }
+
+  func barcelonaReady(request: PBBarcelonaStartupInfo, context: StatusOnlyCallContext) -> EventLoopFuture<PBEmpty>
+
+  func transferRetrievalFailed(request: PBError, context: StatusOnlyCallContext) -> EventLoopFuture<PBEmpty>
 }
 
 extension BridgeProvider {
@@ -465,6 +2591,24 @@ extension BridgeProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "BarcelonaReady":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBBarcelonaStartupInfo>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeBarcelonaReadyInterceptors() ?? [],
+        userFunction: self.barcelonaReady(request:context:)
+      )
+
+    case "TransferRetrievalFailed":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBError>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeTransferRetrievalFailedInterceptors() ?? [],
+        userFunction: self.transferRetrievalFailed(request:context:)
+      )
+
     default:
       return nil
     }
@@ -478,6 +2622,16 @@ extension BridgeProvider {
 public protocol BridgeAsyncProvider: CallHandlerProvider {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: BridgeServerInterceptorFactoryProtocol? { get }
+
+  @Sendable func barcelonaReady(
+    request: PBBarcelonaStartupInfo,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBEmpty
+
+  @Sendable func transferRetrievalFailed(
+    request: PBError,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> PBEmpty
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -499,6 +2653,24 @@ extension BridgeAsyncProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "BarcelonaReady":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBBarcelonaStartupInfo>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeBarcelonaReadyInterceptors() ?? [],
+        wrapping: self.barcelonaReady(request:context:)
+      )
+
+    case "TransferRetrievalFailed":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<PBError>(),
+        responseSerializer: ProtobufSerializer<PBEmpty>(),
+        interceptors: self.interceptors?.makeTransferRetrievalFailedInterceptors() ?? [],
+        wrapping: self.transferRetrievalFailed(request:context:)
+      )
+
     default:
       return nil
     }
@@ -508,6 +2680,14 @@ extension BridgeAsyncProvider {
 #endif // compiler(>=5.6)
 
 public protocol BridgeServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'barcelonaReady'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeBarcelonaReadyInterceptors() -> [ServerInterceptor<PBBarcelonaStartupInfo, PBEmpty>]
+
+  /// - Returns: Interceptors to use when handling 'transferRetrievalFailed'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeTransferRetrievalFailedInterceptors() -> [ServerInterceptor<PBError, PBEmpty>]
 }
 
 public enum BridgeServerMetadata {
@@ -515,9 +2695,22 @@ public enum BridgeServerMetadata {
     name: "Bridge",
     fullName: "Bridge",
     methods: [
+      BridgeServerMetadata.Methods.barcelonaReady,
+      BridgeServerMetadata.Methods.transferRetrievalFailed,
     ]
   )
 
   public enum Methods {
+    public static let barcelonaReady = GRPCMethodDescriptor(
+      name: "BarcelonaReady",
+      path: "/Bridge/BarcelonaReady",
+      type: GRPCCallType.unary
+    )
+
+    public static let transferRetrievalFailed = GRPCMethodDescriptor(
+      name: "TransferRetrievalFailed",
+      path: "/Bridge/TransferRetrievalFailed",
+      type: GRPCCallType.unary
+    )
   }
 }
